@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+typedef struct {
+    char text[100];
+    int is_spam;
+} Message;
+int classify_message(Message message) {
+    char* spam_keywords[] = {"free", "money", "click", "here", "now", "limited", "time", "offer"};
+    int num_spam_keywords = sizeof(spam_keywords) / sizeof(char*);
+    for (int i = 0; i < num_spam_keywords; i++) {
+        if (strstr(message.text, spam_keywords[i])!= NULL) {
+            return 1; 
+        }
+    }
+    return 0; 
+}
+int main() {
+    Message training_messages[] = {
+        {"Free money! Click here!", 1},
+        {"Make money fast!", 1},
+        {"Hello, how are you?", 0},
+        {"I love you!", 0},
+        {"Limited time offer! Don't miss out!", 1},
+        {"This is a legitimate email.", 0}
+    };
+    int num_training_messages = sizeof(training_messages) / sizeof(Message);
+    Message test_messages[] = {
+        {"Make money fast! Click here!", -1},
+        {"Hello, how are you?", -1},
+        {"Free gift! Limited time only!", -1},
+        {"This is a spam email.", -1},
+        {"I love you!", -1}
+    };
+    int num_test_messages = sizeof(test_messages) / sizeof(Message);
+    for (int i = 0; i < num_test_messages; i++) {
+        int classification = classify_message(test_messages[i]);
+        printf("Message: %s\n", test_messages[i].text);
+        printf("Classification: %s\n\n", classification == 1? "Spam" : "Not spam");
+    }
+    return 0;
+}
